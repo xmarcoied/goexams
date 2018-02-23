@@ -1,0 +1,45 @@
+<html>
+    <head>
+        <style>
+            table, th, td {
+                border: 1px solid black;
+                border-collapse: collapse;
+                margin: auto;
+            }
+            th, td ,h1 , h3{
+                padding: 5px;
+                text-align: center;    
+            }
+        </style>
+    </head>
+
+    <body>
+        <hr>
+        <table style="width:50%">
+            <tr>
+                <th colspan="5"><h2>Questions</h2></th>
+            </tr>
+            <tr>
+                <td colspan="5"><a href="/questions/new">Add new question</a></td>
+            </tr>
+            <tr>
+                <th>ID</th>
+                <th>Statement</th>
+            </tr>
+            {{ range .questions }}
+            <tr onclick="GoNav('/question/{{ .ID }}')" style="cursor: pointer;">
+                <td> <a href="/question/{{.ID}}"> {{.ID}} </a></td>
+                <td>{{.Statement}}</td>
+            </tr>
+            {{ end }}
+
+        </table>
+        <hr>
+    <script type="text/javascript">
+        function GoNav(url){
+            document.location.href = url;
+        }
+    </script>
+    </body>
+</html>
+

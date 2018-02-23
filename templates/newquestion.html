@@ -1,0 +1,56 @@
+<html>
+    <head>
+        <style>
+            table, th, td {
+                border: 1px solid black;
+                border-collapse: collapse;
+                margin: auto;
+            }
+            th, td ,h1 ,h3{
+                padding: 5px;
+                text-align: center;    
+            }
+        </style>
+    </head>
+
+    <body>
+        <h1>New Question </h1>
+            <form action="/questions/add" method="post">
+                <table style="width:50%">
+                    <tr>
+                        <th>Statement :</th>
+                        <th> <textarea rows="5" cols="30" name="statement"></textarea></th>
+                    </tr>
+                    <tr>
+                        <th>AnswerA :</th>
+                        <th> <textarea name="answer_a"></textarea></th>
+                    </tr>
+                    <tr>
+                        <th>AnswerB :</th>
+                        <th> <textarea name="answer_b"></textarea></th>
+                    </tr>
+                    <tr>
+                        <th>AnswerC :</th>
+                        <th> <textarea name="answer_c"></textarea></th>
+                    </tr>
+                    <tr>
+                        <th>AnswerD :</th>
+                        <th> <textarea name="answer_d"></textarea></th>
+                    </tr>
+                    <tr>
+                        <th>Correct Answer:</th>
+                        <td>
+                                <input type="radio" name="correct_answer" value="A"> A
+                                <input type="radio" name="correct_answer" value="B"> B
+                                <input type="radio" name="correct_answer" value="C"> C
+                                <input type="radio" name="correct_answer" value="D"> D
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><input type="submit" value="Add"></td>
+                    </tr>    
+                </table>
+            </form>
+    </body>
+
+</html>

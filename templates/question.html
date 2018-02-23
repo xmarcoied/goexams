@@ -1,0 +1,53 @@
+<html>
+    <head>
+        <style>
+            table, th, td {
+                border: 1px solid black;
+                border-collapse: collapse;
+                margin: auto;
+            }
+            th, td ,h1 ,h3{
+                padding: 5px;
+                text-align: center;    
+            }
+        </style>
+    </head>
+
+    <body>
+        <hr>
+        <table style="width:50%">
+            <tr>
+                <th colspan="2"><h2>Question #{{.question.ID}}</h2></th>
+            </tr>
+            <tr>
+                <td colspan="2"><a href="/questions/all">All Questions</a></td>
+            </tr>
+            <tr>
+                <th>Statement :</th>
+                <td> {{.question.Statement}}</th>
+            </tr>
+            <tr>
+                <th>AnswerA :</th>
+                <td> {{.question.AnswerA}}</th>
+            </tr>
+            <tr>
+                <th>AnswerB :</th>
+                <td> {{.question.AnswerB}}</th>
+            </tr>
+            <tr>
+                <th>AnswerC :</th>
+                <td> {{.question.AnswerC}}</th>
+            </tr>
+            <tr>
+                <th>AnswerD :</th>
+                <td> {{.question.AnswerD}}</th>
+            </tr>
+            <tr>
+                <th>Statement :</th>
+                <td> {{.question.CorrectAnswer}}</th>
+            </tr>    
+        </table>
+        <hr>
+    </body>
+
+</html>
