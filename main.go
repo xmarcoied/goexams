@@ -4,8 +4,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
-	"time"
 	"net/http"
+	"time"
 )
 
 // Question strcut
@@ -19,6 +19,7 @@ type Question struct {
 	AnswerD       string `form:"answer_d" json:"answer_d"`
 	CorrectAnswer string `form:"correct_answer" json:"correct_answer"`
 }
+
 var db *gorm.DB
 var err error
 
@@ -26,7 +27,7 @@ func main() {
 	// database connection
 	db, err = gorm.Open("sqlite3", "database.db")
 	db.LogMode(true)
-	
+
 	if err != nil {
 		panic("failed to connect database")
 	}
@@ -45,6 +46,8 @@ func main() {
 	router.Run()
 
 }
+
+// RunGetAllQuestions is http handler to show "questions" html page with all questions
 func RunGetAllQuestions(c *gin.Context) {
 	questions := GetAllQuestions()
 	c.HTML(http.StatusOK, "index.html", gin.H{
@@ -52,35 +55,43 @@ func RunGetAllQuestions(c *gin.Context) {
 	})
 }
 
-func RunGetQuestion(c *gin.Context){
+// RunGetQuestion is http handler to show the "question" html page orded from certain id
+func RunGetQuestion(c *gin.Context) {
 	question := GetQuestion(c.Param("id"))
 	c.HTML(http.StatusOK, "question.html", gin.H{
 		"question": question,
 	})
 }
 
-func RunNewQuestion(c *gin.Context){
+// RunNewQuestion is http handler to show the "newquestion" html page
+func RunNewQuestion(c *gin.Context) {
 	c.HTML(http.StatusOK, "newquestion.html", nil)
 }
 
-func RunAddQuestion(c *gin.Context){
+// RunAddQuestion is http handler binding the question data to create new question
+func RunAddQuestion(c *gin.Context) {
 	var question Question
 	c.Bind(&question)
 	AddNewQuestion(question)
 	c.Redirect(http.StatusMovedPermanently, "/questions/all/")
 
 }
-func GetAllQuestions()[]Question{
+
+// GetAllQuestions return all questions recorded at the database orded by id
+func GetAllQuestions() []Question {
 	var questions []Question
 	db.Find(&questions)
 	return questions
 }
-func GetQuestion(id string)Question{
+
+// GetQuestion get a question recorded at the database associated with a certain id
+func GetQuestion(id string) Question {
 	var question Question
 	db.Where("id = ?", id).First(&question)
 	return question
 }
 
-func AddNewQuestion(q Question){
+// AddNewQuestion add a question to the database
+func AddNewQuestion(q Question) {
 	db.Create(&q)
 }
