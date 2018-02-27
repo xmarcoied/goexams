@@ -13,6 +13,7 @@ type Question struct {
 	ID            int
 	CreatedAt     time.Time
 	Statement     string `form:"statement" json:"statement"`
+	Answer        string `form:"answer" json:"answer"`
 	AnswerA       string `form:"answer_a" json:"answer_a"`
 	AnswerB       string `form:"answer_b" json:"answer_b"`
 	AnswerC       string `form:"answer_c" json:"answer_c"`
@@ -38,10 +39,12 @@ func main() {
 
 	router := gin.Default()
 	// APIs Endpoints
+	router.GET("/", RunGetAllQuestions)
 	router.GET("/questions/all", RunGetAllQuestions)
 	router.GET("/questions/new", RunNewQuestion)
 	router.POST("/questions/add", RunAddQuestion)
 	router.GET("/question/:id", RunGetQuestion)
+	router.GET("/question/:id/solve", RunSolveQuestion)
 	router.LoadHTMLGlob("templates/*.html")
 	router.Run()
 
@@ -74,6 +77,24 @@ func RunAddQuestion(c *gin.Context) {
 	c.Bind(&question)
 	AddNewQuestion(question)
 	c.Redirect(http.StatusMovedPermanently, "/questions/all/")
+
+}
+
+// RunSolveQuestion is http handler to check answered question
+func RunSolveQuestion(c *gin.Context) {
+	answer := c.Query("answer")
+	if len(answer) == 0 {
+		question := GetQuestion(c.Param("id"))
+		c.HTML(http.StatusOK, "solvequestion.html", gin.H{
+			"question": question,
+		})
+	} else {
+		question := GetQuestion(c.Param("id"))
+		question.Answer = c.Query("answer")
+		c.HTML(http.StatusOK, "solvequestion.html", gin.H{
+			"question": question,
+		})
+	}
 
 }
 

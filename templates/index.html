@@ -24,12 +24,14 @@
             </tr>
             <tr>
                 <th>ID</th>
-                <th>Statement</th>
+                <th colspan="3">Statement</th>
             </tr>
             {{ range .questions }}
-            <tr onclick="GoNav('/question/{{ .ID }}')" style="cursor: pointer;">
-                <td> <a href="/question/{{.ID}}"> {{.ID}} </a></td>
+            <tr>
+                <td>{{.ID}}</td>
                 <td>{{.Statement}}</td>
+                <td onclick="GoNav('/question/{{ .ID }}')" style="cursor: pointer;">View</td>
+                <td onclick="GoNav('/question/{{ .ID }}/solve')" style="cursor: pointer;">Solve</td>
             </tr>
             {{ end }}
 
