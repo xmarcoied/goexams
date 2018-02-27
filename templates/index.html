@@ -29,7 +29,10 @@
             {{ range .questions }}
             <tr>
                 <td>{{.ID}}</td>
-                <td>{{.Statement}}</td>
+                <td>
+                    <b>{{if eq .Drafted true}}(Drafted){{end}}</b>
+                    {{.Statement}}
+                </td>
                 <td onclick="GoNav('/question/{{ .ID }}')" style="cursor: pointer;">View</td>
                 <td onclick="GoNav('/question/{{ .ID }}/solve')" style="cursor: pointer;">Solve</td>
             </tr>

@@ -19,6 +19,7 @@ type Question struct {
 	AnswerC       string `form:"answer_c" json:"answer_c"`
 	AnswerD       string `form:"answer_d" json:"answer_d"`
 	CorrectAnswer string `form:"correct_answer" json:"correct_answer"`
+	Drafted       bool
 }
 
 var db *gorm.DB
@@ -73,9 +74,13 @@ func RunNewQuestion(c *gin.Context) {
 
 // RunAddQuestion is http handler binding the question data to create new question
 func RunAddQuestion(c *gin.Context) {
-	var question Question
+	var question struct{
+		Content Question
+		Action        string `form:"action" json:"action"`
+	}
 	c.Bind(&question)
-	AddNewQuestion(question)
+	question.Content.Drafted = question.Action == "Draft"
+	AddNewQuestion(question.Content)
 	c.Redirect(http.StatusMovedPermanently, "/questions/all/")
 
 }
