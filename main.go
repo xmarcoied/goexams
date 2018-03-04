@@ -60,6 +60,7 @@ func main() {
 	router.GET("/exams/new", RunNewExam)
 	router.POST("/exams/new", RunNewExam)
 	router.GET("/exams/all", RunGetAllExams)
+	router.GET("/exam/:id", RunGetExam)
 	router.LoadHTMLGlob("templates/*.html")
 	router.Run()
 
@@ -145,8 +146,16 @@ func RunNewExam(c *gin.Context) {
 func RunGetAllExams(c *gin.Context) {
 	exams := GetAllExams()
 	c.HTML(http.StatusOK, "exam.html", gin.H{
-		"reference": "view",
+		"reference": "view-all",
 		"exams":     exams,
+	})
+}
+
+func RunGetExam(c *gin.Context) {
+	exam := GetExam(c.Param("id"))
+	c.HTML(http.StatusOK, "exam.html", gin.H{
+		"reference": "view-exam",
+		"exam":      exam,
 	})
 }
 
@@ -187,4 +196,14 @@ func GetAllExams() []Exam {
 	var exams []Exam
 	db.Find(&exams)
 	return exams
+}
+
+func GetExam(id string) Exam {
+	// TODO improve db calling
+	var exam Exam
+	var questions []Question
+	db.Where("id = ?", id).First(&exam)
+	db.Model(&exam).Association("Questions").Find(&questions)
+	exam.Questions = questions
+	return exam
 }
