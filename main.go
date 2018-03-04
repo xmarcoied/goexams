@@ -1,17 +1,27 @@
 package main
 
 import (
+	"net/http"
+	"time"
+
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
-	"net/http"
-	"time"
 )
+
+// Exam struct
+type Exam struct {
+	ID             int
+	Questions      []Question `gorm:"many2many:exam_questions;"`
+	QuestionsCount int
+	Name           string
+}
 
 // Question strcut
 type Question struct {
-	ID            int
 	CreatedAt     time.Time
+	ID            int
+	ExamID        int
 	Statement     string `form:"statement" json:"statement"`
 	Answer        string `form:"answer" json:"answer"`
 	AnswerA       string `form:"answer_a" json:"answer_a"`
@@ -36,7 +46,7 @@ func main() {
 	// `defer` for setting a time-closing fn.
 	defer db.Close()
 	// Migrate the schema
-	db.AutoMigrate(&Question{})
+	db.AutoMigrate(&Question{}, &Exam{})
 
 	router := gin.Default()
 	// APIs Endpoints
@@ -46,6 +56,10 @@ func main() {
 	router.POST("/questions/add", RunAddQuestion)
 	router.GET("/question/:id", RunGetQuestion)
 	router.GET("/question/:id/solve", RunSolveQuestion)
+
+	router.GET("/exams/new", RunNewExam)
+	router.POST("/exams/new", RunNewExam)
+	router.GET("/exams/all", RunGetAllExams)
 	router.LoadHTMLGlob("templates/*.html")
 	router.Run()
 
@@ -74,9 +88,9 @@ func RunNewQuestion(c *gin.Context) {
 
 // RunAddQuestion is http handler binding the question data to create new question
 func RunAddQuestion(c *gin.Context) {
-	var question struct{
+	var question struct {
 		Content Question
-		Action        string `form:"action" json:"action"`
+		Action  string `form:"action" json:"action"`
 	}
 	c.Bind(&question)
 	question.Content.Drafted = question.Action == "Draft"
@@ -88,6 +102,8 @@ func RunAddQuestion(c *gin.Context) {
 // RunSolveQuestion is http handler to check answered question
 func RunSolveQuestion(c *gin.Context) {
 	answer := c.Query("answer")
+	// Detect http Method used
+	// if len(answer) = 0 , then its a GET. if not , then its a POST
 	if len(answer) == 0 {
 		question := GetQuestion(c.Param("id"))
 		c.HTML(http.StatusOK, "solvequestion.html", gin.H{
@@ -101,6 +117,37 @@ func RunSolveQuestion(c *gin.Context) {
 		})
 	}
 
+}
+
+//RunNewExam is http handler to build a new exam
+func RunNewExam(c *gin.Context) {
+	// Binding struct used for binding questions-ID
+	type Binding struct {
+		Questions []string
+		Name      string
+	}
+
+	if c.Request.Method == "GET" {
+		questions := GetAllQuestions()
+		c.HTML(http.StatusOK, "exam.html", gin.H{
+			"reference": "build",
+			"questions": questions,
+		})
+	} else if c.Request.Method == "POST" {
+		data := new(Binding)
+		c.Bind(data)
+		AddNewExam(data.Questions, data.Name)
+		c.Redirect(http.StatusMovedPermanently, "/exams/all/")
+	}
+
+}
+
+func RunGetAllExams(c *gin.Context) {
+	exams := GetAllExams()
+	c.HTML(http.StatusOK, "exam.html", gin.H{
+		"reference": "view",
+		"exams":     exams,
+	})
 }
 
 // GetAllQuestions return all questions recorded at the database orded by id
@@ -120,4 +167,24 @@ func GetQuestion(id string) Question {
 // AddNewQuestion add a question to the database
 func AddNewQuestion(q Question) {
 	db.Create(&q)
+}
+
+// AddNewExam add a collected questions to the exam database
+func AddNewExam(data []string, name string) {
+	var exam Exam
+	for i := 0; i < len(data); i++ {
+		QuestionID := data[i]
+		question := GetQuestion(QuestionID)
+		exam.Questions = append(exam.Questions, question)
+	}
+	exam.Name = name
+	exam.QuestionsCount = len(data)
+	db.Create(&exam)
+}
+
+// GetAllExams return all questions recorded at the database orded by id
+func GetAllExams() []Exam {
+	var exams []Exam
+	db.Find(&exams)
+	return exams
 }
