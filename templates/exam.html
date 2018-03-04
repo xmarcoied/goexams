@@ -1,0 +1,68 @@
+<html>
+    <head>
+        <style>
+            table, th, td {
+                border: 1px solid black;
+                border-collapse: collapse;
+                margin: auto;
+            }
+            th, td ,h1 , h3{
+                padding: 5px;
+                text-align: center;    
+            }
+        </style>
+    </head>
+
+    <body>
+        <hr>
+        <!-- -->
+        {{if eq .reference "build"}}
+        <table style="width:50%">
+            <tr> <th colspan="2"><h2>Build Exam</h2> </th> </tr>
+            <tr> <th colspan="2"> Statement </th> </tr>
+            <form action="/exams/new" method="post">
+            {{ range .questions }}
+                <tr>
+                    {{if eq .Drafted false}}
+                    <div>
+                        <td><input id="{{.ID}}" type="checkbox" name="Questions" value="{{.ID}}"></td>
+                        <td onclick="Toggle({{.ID}});" style="cursor: pointer;">{{.Statement}}</td>
+                    </div>
+                    {{end}}
+                </tr>
+            {{ end }}
+                <tr>
+                    <td colspan="2">Set a name to the exam <input type="text" name="Name"></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><input type="submit"></td>
+                </tr>
+            </form>
+        </table>
+        {{end}}
+        <!-- -->
+        {{if eq .reference "view"}}
+        <table style="width:50%">
+            <tr> <th colspan="2"><h2>Exams</h2> </th> </tr>
+            {{range .exams}}
+                <tr>
+                    <td onclick="GoNav('/exams/{{ .ID }}')" style="cursor: pointer;">
+                        {{.Name}} ( Exam #{{.ID}} )
+                    </td>
+                </tr>
+            {{end}}
+        </table>
+        {{end}}
+        <hr>
+    <script type="text/javascript">
+        function Toggle(id){
+            var now = document.getElementById(id).checked;
+            document.getElementById(id).checked = ! now;
+        }
+        function GoNav(url){
+            document.location.href = url;
+        }
+    </script>
+    </body>
+</html>
+
