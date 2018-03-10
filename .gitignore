@@ -1,5 +1,8 @@
 # dependencies files
 
+# ignore vendoring folders
+vendor/*/
+
 # Binaries for programs and plugins
 *.exe
 *.dll
