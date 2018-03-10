@@ -18,10 +18,17 @@
         <hr>
         <table style="width:50%">
             <tr>
-                <th colspan="2"><h2>Question #{{.question.ID}}</h2></th>
+                <td colspan="5">
+                    <a href="/questions/all">All questions</a> |
+                    <a href="/questions/new">New question</a> | 
+                    <a href="/exams/all">All exams</a> |
+                    <a href="/exams/new">New exam</a> 
+                </td>
             </tr>
             <tr>
-                <td colspan="2"><a href="/questions/all">All Questions</a></td>
+                <th colspan="5">
+                    <p style="text-align: left;"> >> solve question # {{.question.ID}}</p>
+                </th>
             </tr>
             <tr>
                 <th>Statement :</th>
