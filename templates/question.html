@@ -1,23 +1,29 @@
 <html>
     <head>
         <style>
-            table, th, td {
+            table.center{
+                width:50%
+            }
+            table.center, th.center, td.center {
                 border: 1px solid black;
                 border-collapse: collapse;
                 margin: auto;
             }
-            th, td ,h1 ,h3{
+            th.center, td.center ,h1.center ,h3.center{
                 padding: 5px;
                 text-align: center;    
+            }
+            table.internal, th.internal, td.internal {
+                border: 1px solid white;
             }
         </style>
     </head>
 
     <body>
         <hr>
-        <table style="width:50%">
+        <table class="center">
             <tr>
-                <td colspan="5">
+                <td class="center" colspan="5">
                     <a href="/questions/all">All questions</a> |
                     <a href="/questions/new">New question</a> | 
                     <a href="/exams/all">All exams</a> |
@@ -25,33 +31,30 @@
                 </td>
             </tr>
             <tr>
-                <th colspan="5">
+                <th class="center" colspan="5">
                     <p style="text-align: left;"> >> question #{{.question.ID}}</p>
                 </th>
             </tr>
             <tr>
-                <th>Statement :</th>
-                <td> {{.question.Statement}}</th>
-            </tr>
+                    <td class="center" colspan="2">
+                            <p>Q {{.question.ID}}) {{.question.Statement}}</p>
+                            <table class="center">
+                                <tr>
+                                    <td class="internal">(a) {{.question.AnswerA}}</td>
+                                    <td class="internal">(b) {{.question.AnswerB}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="internal">(c) {{.question.AnswerC}}</td>
+                                    <td class="internal">(d) {{.question.AnswerC}}</td>
+                                </tr>
+                            </table>
+                    </td>
+            </tr>   
             <tr>
-                <th>AnswerA :</th>
-                <td> {{.question.AnswerA}}</th>
-            </tr>
-            <tr>
-                <th>AnswerB :</th>
-                <td> {{.question.AnswerB}}</th>
-            </tr>
-            <tr>
-                <th>AnswerC :</th>
-                <td> {{.question.AnswerC}}</th>
-            </tr>
-            <tr>
-                <th>AnswerD :</th>
-                <td> {{.question.AnswerD}}</th>
-            </tr>
-            <tr>
-                <th>Correct Answer :</th>
-                <td> {{.question.CorrectAnswer}}</th>
+                <td class="center" colspan="2">
+                    <b>Correct Answer: </b>
+                    <a>{{.question.CorrectAnswer}}</a>
+                </th>
             </tr>    
         </table>
         <hr>
