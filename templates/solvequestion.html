@@ -1,14 +1,20 @@
 <html>
     <head>
         <style>
-            table, th, td {
+            table.center{
+                width:50%
+            }
+            table.center, th.center, td.center {
                 border: 1px solid black;
                 border-collapse: collapse;
                 margin: auto;
             }
-            th, td ,h1 ,h3{
+            th.center, td.center ,h1.center ,h3.center{
                 padding: 5px;
                 text-align: center;    
+            }
+            table.internal, th.internal, td.internal {
+                border: 1px solid white;
             }
         </style>
     </head>
@@ -16,9 +22,9 @@
     <body>
         <form action="/question/{{.question.ID}}/solve" method="get">
         <hr>
-        <table style="width:50%">
+        <table class="center">
             <tr>
-                <td colspan="5">
+                <td class="center" colspan="5">
                     <a href="/questions/all">All questions</a> |
                     <a href="/questions/new">New question</a> | 
                     <a href="/exams/all">All exams</a> |
@@ -26,42 +32,48 @@
                 </td>
             </tr>
             <tr>
-                <th colspan="5">
+                <th class="center" colspan="5">
                     <p style="text-align: left;"> >> solve question # {{.question.ID}}</p>
                 </th>
             </tr>
             <tr>
-                <th>Statement :</th>
-                <td> {{.question.Statement}}</th>
-            </tr>
-            <tr>
-                <th>AnswerA :</th>
-                <td> {{.question.AnswerA}}</th>
-            </tr>
-            <tr>
-                <th>AnswerB :</th>
-                <td> {{.question.AnswerB}}</th>
-            </tr>
-            <tr>
-                <th>AnswerC :</th>
-                <td> {{.question.AnswerC}}</th>
-            </tr>
-            <tr>
-                <th>AnswerD :</th>
-                <td> {{.question.AnswerD}}</th>
-            </tr>
-            <tr>
-                <th>Answer :</th>
-                <td>
-                    <input type="radio" name="answer" value="A"> A
-                    <input type="radio" name="answer" value="B"> B
-                    <input type="radio" name="answer" value="C"> C
-                    <input type="radio" name="answer" value="D"> D
-                </th>
+                <td class="center" colspan="2">
+                    <p>Q{{.question.ID}}) {{.question.Statement}}</p>
+                    <table class="center">
+                        <tr>
+                            <td class="internal">
+                                <input type="radio" name="answer" value="A" id ="1">
+                                <a onclick="Toggle(1);" style="cursor: pointer;">
+                                        {{.question.AnswerA}}
+                                </a>
+                            </td>
+                            <td class="internal">
+                                <input type="radio" name="answer" value="B" id ="2">
+                                <a onclick="Toggle(2);" style="cursor: pointer;">
+                                        {{.question.AnswerB}}
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="internal">
+                                <input type="radio" name="answer" value="B" id ="3">
+                                <a onclick="Toggle(3);" style="cursor: pointer;">
+                                        {{.question.AnswerC}}
+                                </a>
+                            </td>
+                            <td class="internal">
+                                <input type="radio" name="answer" value="B" id ="4">
+                                <a onclick="Toggle(4);" style="cursor: pointer;">
+                                        {{.question.AnswerD}}
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
             </tr>
             {{if ne .question.Answer ""}}
             <tr>
-                <td colspan="2">
+                <td class="center" colspan="2">
                         {{if eq .question.Answer .question.CorrectAnswer}}
                         Correct Answer
                         {{end}}
@@ -72,11 +84,19 @@
             </tr> 
             {{end}}
             <tr>
-                <td colspan="2"><input type="submit" value="Solve"></td>
+                <td class="center" colspan="2"><input type="submit" value="Solve"></td>
             </tr>
         </table>
         <hr>
         </form>
+        <script type="text/javascript">
+            function Toggle(id){
+                var now = document.getElementById(id).checked;
+                document.getElementById(id).checked = ! now;
+            }
+            function GoNav(url){
+                document.location.href = url;
+            }
+        </script>
     </body>
-
 </html>
