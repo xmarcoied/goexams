@@ -66,6 +66,15 @@ func main() {
 
 }
 
+// QuestionSummarize Summarize question statement if it larger than 50 characters
+func QuestionSummarize(questionStatement string) string {
+	if len(questionStatement) > 50 {
+		partial := questionStatement[0:50] + "..."
+		return partial
+	}
+	return questionStatement
+}
+
 // RunGetAllQuestions is http handler to show "questions" html page with all questions
 func RunGetAllQuestions(c *gin.Context) {
 	questions := GetAllQuestions()
